@@ -24,6 +24,10 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 // CORS options  befor Router
+// 想要用ContentType:application/json发送跨域请求，
+// 服务器端还必须设置一个名为Access-Control-Allow-Headers的Header，
+// 将它的值设置为 Content-Type，
+// 表明服务器能够接收到前端发送的请求中的ContentType属性并使用它的值
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
   res.header('Access-Control-Allow-Methods', '*');
