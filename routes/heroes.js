@@ -7,16 +7,18 @@ router.get('/', function(req, res, next) {
   res.set({
     'Content-Type':  'application/json'
   });
-  res.type('json');  // 设置JSON格式传输
-  res.status(200);   // 设置状态码
+  console.log(req.host, req.method, req.body);
   res.send(HEROES);  // 发送数据
 });
 
-router.post('/post', function(req, res, next) {
+router.post('/', function(req, res, next) {
   res.set({
     'Content-Type':  'application/json'
   }); 
-  res.send(HEROES);  // 发送数据
+  // console.log(req.body);
+  // HEROES.push(req.body);
+  console.log(req.host, req.method, req.body);
+  res.send(req.body);  // 发送数据
 });
 
 router.delete('/delete', function(req, res, next) {
