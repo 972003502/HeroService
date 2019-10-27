@@ -78,13 +78,31 @@ function createModels() {
   }
 }
 
-function find(req, res, next) {
-  let modelStr = req.query.model;
-  modelStrCache[0] = modelStr;
+function getModel(modelStr) {
+  let str = modelStr;
+  modelStrCache[0] = str;
   if (modelStrCache[0] != modelStrCache[1]) {
-    model = models.get(modelStr);
-    modelStrCache[1] = modelStr;
+    model = models.get(str);
+    modelStrCache[1] = str;
   }
+}
+
+function dbOperate(req, res, next) {
+  switch (req.method) {
+    case 'GET':
+      find(req, res, next);
+      break;
+    case 'POST':
+      add(req, res, next);
+      break;
+    default:
+      console.log(`Received an unknown http method, method name: ${req.method}`);
+      next();
+  }
+}
+
+function find(req, res, next) {
+  getModel(req.query.model);
   if (!model) next();
   model.find(null, function (err, docs) {
     if (err) {
@@ -92,6 +110,21 @@ function find(req, res, next) {
       next();
     }
     res.body = docs;
+    res.info = { message: 'POST sccessfull' };
+    next();
+  })
+}
+
+function add(req, res, next) {
+  getModel(req.query.model);
+  if (!model) next();
+  model.create(req.body, function (err, docs) {
+    if (err) {
+      console.log(err);
+      next();
+    }
+    res.body = docs;
+    res.info = { message: 'POST sccessfull' };
     next();
   })
 }
@@ -105,7 +138,9 @@ module.exports = mongodb = {
   createModel: createModel,
   createModels: createModels,
   init: init,
+  dbOperate: dbOperate,
   find: find,
+  add: add,
   close: close,
   schemas: schemas,
   models: models
