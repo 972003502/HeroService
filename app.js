@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var heroesRouter = require('./routes/heroes');
+//var mongodbTestRouter = require('./routes/mongodbTest');
 
 var app = express();
 
@@ -23,9 +24,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// CORS options  befor Router
+// CORS options
+// must setting it befor the Router
 // 想要用ContentType:application/json发送跨域请求，
-// 服务器端还必须设置一个名为Access-Control-Allow-Headers的Header，
+// 服务器端还必须设置一个名为Access-Control-Allow-Headers的Header， 
 // 将它的值设置为 Content-Type，
 // 表明服务器能够接收到前端发送的请求中的ContentType属性并使用它的值
 app.use(function(req, res, next) {
@@ -40,6 +42,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/heroes', heroesRouter);
+//app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
