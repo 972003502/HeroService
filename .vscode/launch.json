@@ -7,14 +7,14 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "启动测试",
-      "program": "${workspaceFolder}\\public\\javascripts\\test"
+      "name": "启动服务",
+      "program": "${workspaceFolder}\\bin\\www"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "启动程序",
-      "program": "${workspaceFolder}\\bin\\www"
+      "name": "启动测试",
+      "program": "${workspaceFolder}\\public\\javascripts\\test"
     }
   ]
 }

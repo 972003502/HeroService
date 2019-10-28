@@ -22,4 +22,32 @@
 //   console.log('ok');
 // }
 
-console.log(false || true);
+obj = {
+  str: 'john'
+}
+
+obj1 = {
+  str: 'geek'
+}
+
+obj2 = {
+  str: 'alen'
+}
+
+
+
+function sayHello(obj) {
+  console.log(obj.str);
+}
+
+function foo(...args) {
+  console.log('start');
+  if(args) {
+    for(let i of args){
+      sayHello(i);
+    }
+  }
+}
+
+
+foo(obj1,obj2);

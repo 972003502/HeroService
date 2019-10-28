@@ -1,7 +1,13 @@
 const schema = {
   hero: {
-    id: String,
-    name: String
+    id: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    }
   }
 }
 
