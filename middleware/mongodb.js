@@ -150,14 +150,18 @@ function find(req, res, next) {
   if (!model) return next();
   model.find(null, function (err, docs) {
     if (err) {
-      console.log(err);
-      res.info = { error: err };
-      return next();
+      console.error(err);
+      return next(err);
     }
     res.body = docs;
     res.info = { message: 'GET sccessfull' };
     next();
   })
+}
+
+// 数据库条件查询操作中间件
+function findByCondition(req, res, next) {
+  
 }
 
 // 数据库新增操作中间件
@@ -166,9 +170,8 @@ function add(req, res, next) {
   if (!model) return next();
   model.create(req.body, function (err, docs) {
     if (err) {
-      console.log(err);
-      res.info = { error: err };
-      return next();
+      console.error(err);
+      return next(err);
     }
     res.body = docs;
     res.info = { message: 'POST sccessfull' };
@@ -206,6 +209,10 @@ function update(req, res, next) {
   //   next();
   // })
   next();
+}
+
+function errorHandler(err, req, res, next) {
+
 }
 
 module.exports = mongodb = {
