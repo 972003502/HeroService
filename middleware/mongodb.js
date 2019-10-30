@@ -1,6 +1,7 @@
 let mongoose = require('mongoose');
 let schema = require('../schema/schema');
 
+let mongooseOrigin = mongoose;
 let modelStrCache = [null, null];
 let model = null;
 let schemas = new Map();
@@ -237,6 +238,7 @@ function errorHandler(err, req, res, next) {
 }
 
 module.exports = mongodb = {
+  mongooseOrigin: mongooseOrigin,
   dbOptions: dbOptions,
   schemaOptions: schemaOptions,
   connect: connect,
