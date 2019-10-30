@@ -12,21 +12,42 @@ let dbOptions = {
   keepAlive: 120,
   reconnectTries: 10,
   reconnectInterval: 30,
-  connectTimeoutMS: 10000
+  connectTimeoutMS: 10000,
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 }
 let schemaOptions = {
   strict: true,
   versionKey: false
 }
 
+// 设置配置项
+function set(option, value) {
+  mongoose.set(option, value);
+}
+
 // 连接数据库函数
 function connect(connectUrl, options = dbOptions) {
+  let retry = 0;
+  let connected = false;
+  let start = Date.now();
   mongoose.connect(connectUrl, options);
   mongoose.connection.on('error', (error) => {
     console.log('connect fail:', error);
+    let timer = setTimeout(() => {
+      if(retry < 3 && !connected) {
+        retry += 1;
+        console.log(`第${retry}次尝试重新连接...`);
+        mongoose.connect(connectUrl, options);
+      } else {
+        clearTimeout(timer);
+      }
+    }, 3000);
   })
   mongoose.connection.on('connected', () => {
+    connected = true;
     console.log('connect seccess!');
+    console.log('连接耗时:', Date.now() - start, 'ms');
   })
   mongoose.connection.on('disconnected', () => {
     console.log('connect disconnected');
@@ -161,7 +182,7 @@ function find(req, res, next) {
 
 // 数据库条件查询操作中间件
 function findByCondition(req, res, next) {
-  
+
 }
 
 // 数据库新增操作中间件
@@ -224,6 +245,7 @@ module.exports = mongodb = {
   createModel: createModel,
   createModels: createModels,
   init: init,
+  set: set,
   dbOperate: dbOperate,
   find: find,
   add: add,
