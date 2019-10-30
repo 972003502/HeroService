@@ -35,7 +35,7 @@ function connect(connectUrl, options = dbOptions) {
   mongoose.connection.on('error', (error) => {
     console.log('connect fail:', error);
     let timer = setTimeout(() => {
-      if(retry < 3 && !connected) {
+      if (retry < 3 && !connected) {
         retry += 1;
         console.log(`第${retry}次尝试重新连接...`);
         mongoose.connect(connectUrl, options);
