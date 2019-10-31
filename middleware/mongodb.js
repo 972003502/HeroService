@@ -2,10 +2,8 @@ let mongoose = require('mongoose');
 let schema = require('../schema/schema');
 
 let mongooseOrigin = mongoose;
-let modelStrCache = [null, null];
-let model = null;
-let schemas = new Map();
-let models = new Map();
+let schemasCache = new Map();
+let modelsCache = new Map();
 
 // 数据库配置
 let dbOptions = {
@@ -20,11 +18,6 @@ let dbOptions = {
 let schemaOptions = {
   strict: true,
   versionKey: false
-}
-
-// 设置配置项
-function set(option, value) {
-  mongoose.set(option, value);
 }
 
 // 连接数据库函数
@@ -65,10 +58,8 @@ function init(connectUrl, options = dbOptions) {
 // 关闭数据库连接函数
 function close() {
   mongoose.connection.close();
-  model = null;
-  modelStrCache = [null, null];
-  schemas.clear();
-  models.clear();
+  schemasCache.clear();
+  modelsCache.clear();
 }
 
 // 中间件工厂函数
@@ -106,7 +97,7 @@ function createSchemas(...args) {
         useMiddleware(newSchema, opt);
       }
     }
-    schemas.set(key, newSchema);
+    schemasCache.set(key, newSchema);
   }
 }
 
@@ -116,19 +107,19 @@ function createModel(modelStr) {
     console.error(schema, 'is empty, Can’t create model!');
     return;
   }
-  if (!modelStr in schema || models.has(modelStr)) return;
+  if (!modelStr in schema || modelsCache.has(modelStr)) return;
   let typeObj = schema[modelStr];
   let newModel = mongoose.model(modelStr, createSchema(typeObj));
-  models.set(modelStr, newModel);
+  modelsCache.set(modelStr, newModel);
   return newModel;
 }
 
 // 创建Models
 function createModels() {
-  if (!schemas.size) return;
-  for (let entry of schemas) {
+  if (!schemasCache.size) return;
+  for (let entry of schemasCache) {
     let newModel = mongoose.model(entry[0], entry[1]);
-    models.set(entry[0], newModel);
+    modelsCache.set(entry[0], newModel);
   }
 }
 
@@ -137,9 +128,10 @@ function getModel(modelStr) {
   let str = modelStr;
   modelStrCache[0] = str;
   if (modelStrCache[0] != modelStrCache[1]) {
-    model = models.get(str);
     modelStrCache[1] = str;
+    return modelsCache.get(str);
   }
+  return;
 }
 
 // 数据库操作Express中间件
@@ -168,7 +160,7 @@ function dbOperate(req, res, next) {
 
 // 数据库查询操作中间件
 function find(req, res, next) {
-  getModel(req.query.model);
+  let model = modelsCache.get(req.query.model);
   if (!model) return next();
   model.find(null, function (err, docs) {
     if (err) {
@@ -188,7 +180,7 @@ function findByCondition(req, res, next) {
 
 // 数据库新增操作中间件
 function add(req, res, next) {
-  getModel(req.query.model);
+  let model = modelsCache.get(req.query.model);
   if (!model) return next();
   model.create(req.body, function (err, docs) {
     if (err) {
@@ -247,11 +239,10 @@ module.exports = mongodb = {
   createModel: createModel,
   createModels: createModels,
   init: init,
-  set: set,
   dbOperate: dbOperate,
   find: find,
   add: add,
   close: close,
-  schemas: schemas,
-  models: models
+  schemasCache: schemasCache,
+  modelsCache: modelsCache
 };

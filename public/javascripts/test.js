@@ -1,53 +1,13 @@
-// let user = {
-//   hero: {
-//     id: String,
-//     name: String
-//   }
-// }
-// console.log(!'hero' in user);
-// // console.log(JSON.stringify(user))
-// let map = new Map();
-// //map.set('1', '123')
-// // console.log(map.size);
+let john = {name: 'john'};
 
-// // for(let i in user) {
-// //   console.log(i, user[i]);
-// // }
-// let mod;
-// function foo() {
-//   return;
-// }
-// mod = map.get(1);
-// if(!mod) {
-//   console.log('ok');
-// }
+let arr = [john];
 
-obj = {
-  str: 'john'
-}
+let map = new WeakMap();
+map.set(john, '...')
 
-obj1 = {
-  str: 'geek'
-}
+let jack = john;
+john = null;
 
-obj2 = {
-  str: 'alen'
-}
+console.log(map.get(john));
 
-
-
-function sayHello(obj) {
-  console.log(obj.str);
-}
-
-function foo(...args) {
-  console.log('start');
-  if(args) {
-    for(let i of args){
-      sayHello(i);
-    }
-  }
-}
-
-
-foo(obj1,obj2);
+// map.has(john);
