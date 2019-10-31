@@ -17,6 +17,10 @@ router.post('/api', function (req, res, next) {
   res.send(res.info);
 });
 
+router.post('/', function (req, res, next) {
+  res.send({'接收数据': req.body});
+});
+
 /* DELETE hero listing. */
 router.delete('/api', function (req, res, next) {
   res.send();

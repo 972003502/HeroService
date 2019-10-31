@@ -31,6 +31,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // 将它的值设置为 Content-Type，
 // 表明服务器能够接收到前端发送的请求中的ContentType属性并使用它的值
 app.use(function(req, res, next) {
+  res.header('Content-Language', 'zh-cn');
+  res.header('Cache-Control', 'no-cache');
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
