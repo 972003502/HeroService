@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongodb = require('../middleware/mongodb');
+//var zlib = require('zlib');
 
 router.use('/api', mongodb.dbOperate);
 
