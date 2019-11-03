@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongodb = require('../middleware/mongodb');
-//var zlib = require('zlib');
+var zlib = require('zlib');
 
 router.use('/api', mongodb.dbOperate);
 
@@ -10,7 +10,10 @@ mongodb.init(DB_URL);
 
 /* GET hero listing. */
 router.get('/api', function (req, res, next) {
-  res.send(res.body);
+  // let str = JSON.stringify(res.body);
+  // let buf = new Buffer(str);
+  // console.log(buf);
+  // res.send(zlib.gzip(buf));
 });
 
 /* POST hero listing. */

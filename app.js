@@ -37,7 +37,7 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Max-Age', '1000');
-  // res.header('Content-Encoding', 'gzip');
+  res.header('Content-Encoding', 'gzip');
   next();
 });
 
