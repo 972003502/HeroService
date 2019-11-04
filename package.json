@@ -6,12 +6,15 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "connect-multiparty": "^2.2.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-formidable": "^1.2.0",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mongoose": "^5.7.7",
-    "morgan": "~1.9.1"
+    "morgan": "~1.9.1",
+    "multiparty": "^4.2.1"
   }
 }

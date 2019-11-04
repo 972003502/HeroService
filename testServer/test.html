@@ -1,0 +1,162 @@
+<body>
+  <p>Native form:</p>
+  <form id="formElem" action="http://localhost:3000/heroes" method="POST">
+    <input type="text" name="name" value="john">
+    <input type="text" name="age" value="25">
+    <input type="submit" value="submit">
+  </form>
+  <p>GET method:</p>
+  <button onclick="fetchGet()">fetch</button>
+  <button onclick="xhrGet()">XMLHttpRequest</button>
+  <p>POST method:</p>
+  <button onclick="fetchPost()">fetch</button>
+  <button onclick="xhrPost()">XMLHttpRequest</button>
+  <script>
+    let apiUrl = 'http://localhost:3000/heroes/api/?model=hero';
+    let formUrl = 'http://localhost:3000/heroes';
+    let hero = {
+      id: '5',
+      name: 'john'
+    }
+    let formData = new FormData(formElem);
+
+    function fetchGet() {
+      let result = {};
+      fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Language': 'zh-CN',
+          'Content-Language': 'zh-CN',
+          'Content-Type': 'application/json',
+          'Access-Control-Request-Method': 'GET, POST, DELETE, PUT',
+          'Access-Control-Request-Headers': 'Content-Type'
+        },
+        body: undefined,
+        referrer: 'http://localhost:3001',
+        referrerPolicy: 'no-referrer-when-downgrade',
+        mode: 'cors',
+        // keepalive: true
+      }).then(response => {
+        result.status = response.status;
+        result.statusText = response.statusText;
+        result.response = response;
+        return result;
+      }).then(
+        res => result.response.json()
+      ).then(
+        res => console.log('fetch GET:', result.status, result.statusText, res)
+      );
+    }
+
+    function fetchPost() {
+      let result = {};
+      fetch(formUrl, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Accept-Language': 'zh-CN',
+          'Content-Language': 'zh-CN',
+          'Access-Control-Request-Headers': 'Content-Type',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+          // 'Content-Type': 'multipart/form-data'
+        },
+        body: formData,
+        referrer: 'http://localhost:3001',
+        referrerPolicy: 'no-referrer-when-downgrade',
+        mode: 'cors',
+        // keepalive: true
+      }).then(response => {
+        result.status = response.status;
+        result.statusText = response.statusText;
+        result.response = response;
+        return result;
+      }).then(
+        res => result.response.json()
+      ).then(
+        res => console.log('fetch POST:', result.status, result.statusText, res)
+      );
+    }
+
+    function xhrGet() {
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', apiUrl);
+      xhr.timeout = 100000; // 设置连接超时，超时时触发ontimeout事件
+      xhr.responseType = 'json' //响应的数据解析成json格式
+
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Accept-Language', 'zh-CN');
+      xhr.setRequestHeader('Content-Language', 'zh-CN');
+      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.send(); // 发送数据
+      // xhr.abort();
+
+      // 接收到响应
+      xhr.onload = function () {
+        // console.log(xhr.getAllResponseHeaders());
+        console.log('xhr GET:', xhr.status, xhr.statusText, xhr.response);
+      }
+      // 触发错误
+      xhr.onerror = function () {
+        console.log(new Error('error'));
+      }
+      // 进度监听
+      xhr.onprogress = function (event) {
+        // console.log(`Received ${event.loaded} of ${event.total}`)
+      }
+      // 超时
+      xhr.ontimeout = function () {
+        console.log(`timeout ${xhr.timeout}`);
+      }
+      // 状态变化监听
+      xhr.onreadystatechange = function () {
+        // console.log('state:', xhr.readyState);
+      }
+      // 中止请求监听
+      xhr.onabort = function () {
+        console.log('请求中止！');
+      }
+    }
+
+    function xhrPost() {
+      let xhr = new XMLHttpRequest();
+      xhr.open('POST', formUrl);
+      xhr.timeout = 100000; // 设置连接超时，超时时触发ontimeout事件
+      xhr.responseType = 'json' //响应的数据解析成json格式
+
+      xhr.setRequestHeader('Accept', 'application/json');
+      xhr.setRequestHeader('Accept-Language', 'zh-CN');
+      xhr.setRequestHeader('Content-Language', 'zh-CN');
+      // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+      xhr.send(formData); // 发送数据
+      // xhr.abort();
+
+      // 接收到响应
+      xhr.onload = function () {
+        // console.log(xhr.getAllResponseHeaders());
+        console.log('xhr POST:', xhr.status, xhr.statusText, xhr.response);
+      }
+      // 触发错误
+      xhr.onerror = function () {
+        console.log(new Error('error'));
+      }
+      // 进度监听
+      xhr.onprogress = function (event) {
+        // console.log(`Received ${event.loaded} of ${event.total}`)
+      }
+      // 超时
+      xhr.ontimeout = function () {
+        console.log(`timeout ${xhr.timeout}`);
+      }
+      // 状态变化监听
+      xhr.onreadystatechange = function () {
+        // console.log('state:', xhr.readyState);
+      }
+      // 中止请求监听
+      xhr.onabort = function () {
+        console.log('请求中止！');
+      }
+    }
+  </script>
+</body>

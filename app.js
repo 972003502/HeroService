@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+// var formidableMiddleware = require('express-formidable');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+// app.use(formidableMiddleware());
 
 // CORS options
 // must setting it befor the Router
@@ -37,7 +39,7 @@ app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Methods', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   res.header('Access-Control-Max-Age', '1000');
-  res.header('Content-Encoding', 'gzip');
+  // res.header('Content-Encoding', 'gzip');
   next();
 });
 

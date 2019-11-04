@@ -8,6 +8,6 @@ map.set(john, '...')
 let jack = john;
 john = null;
 
-console.log(map.get(john));
+console.log(123);
 
 // map.has(john);

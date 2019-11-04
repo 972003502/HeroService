@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
-var mongodb = require('../middleware/mongodb');
-var zlib = require('zlib');
+const express = require('express');
+const router = express.Router();
+const mongodb = require('../middleware/mongodb');
+const multiparty = require('multiparty');
 
 router.use('/api', mongodb.dbOperate);
 
@@ -14,6 +14,7 @@ router.get('/api', function (req, res, next) {
   // let buf = new Buffer(str);
   // console.log(buf);
   // res.send(zlib.gzip(buf));
+  res.send(res.body);
 });
 
 /* POST hero listing. */
@@ -22,7 +23,11 @@ router.post('/api', function (req, res, next) {
 });
 
 router.post('/', function (req, res, next) {
-  res.send({'接收数据': req.body});
+  let form = new multiparty.Form();
+  form.parse(req, function (err, fields, file) {
+    console.log(fields);
+    res.send({ '服务端接收数据': fields });
+  })
 });
 
 /* DELETE hero listing. */
