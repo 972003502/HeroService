@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-let schema = require('../schema/schema');
+const schema = require('../schema/schema');
 
-let mongooseOrigin = mongoose;
+const nativeMongoose = mongoose;
 let schemasCache = new Map();
 let modelsCache = new Map();
 
@@ -27,7 +27,10 @@ function connect(connectUrl, options = dbOptions) {
   let start = Date.now();
   mongoose.connect(connectUrl, options);
   mongoose.connection.on('error', (error) => {
-    console.log('connect fail:', error);
+    console.log('connect fail:', {
+      database: db.name,
+      error: error
+    });
     let timer = setTimeout(() => {
       if (retry < 3 && !connected) {
         retry += 1;
@@ -40,17 +43,29 @@ function connect(connectUrl, options = dbOptions) {
   })
   mongoose.connection.on('connected', () => {
     connected = true;
-    console.log('connect seccess!');
-    console.log('连接耗时:', Date.now() - start, 'ms');
+    connectionsInfo();
+    console.log('connect seccess!', {
+      database: mongoose.connection.name,
+      connectionTime: Date.now() - start
+    });
   })
   mongoose.connection.on('disconnected', () => {
-    console.log('connect disconnected');
+    console.log('connect disconnected', {
+      database: mongoose.connection.name
+    });
   })
 }
 
+// 打印当前连接数
+function connectionsInfo() {
+  mongoose.connection.db.admin().serverStatus()
+    .then(
+      res => console.log(res.connections)
+    )
+}
+
 // 数据库初始化函数
-function init(connectUrl, options = dbOptions) {
-  connect(connectUrl, options)
+function init() {
   createSchemas();
   createModels();
 }
@@ -167,6 +182,7 @@ function find(req, res, next) {
       console.error(err);
       return next(err);
     }
+    connectionsInfo();
     res.body = docs;
     res.info = { message: 'GET sccessfull' };
     next();
@@ -230,7 +246,7 @@ function errorHandler(err, req, res, next) {
 }
 
 module.exports = mongodb = {
-  mongooseOrigin: mongooseOrigin,
+  nativeMongoose: nativeMongoose,
   dbOptions: dbOptions,
   schemaOptions: schemaOptions,
   connect: connect,

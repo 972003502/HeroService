@@ -1,17 +1,19 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var bodyParser = require('body-parser');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
+const mongodb = require('./middleware/mongodb');
 // var formidableMiddleware = require('express-formidable');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var heroesRouter = require('./routes/heroes');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const heroesRouter = require('./routes/heroes');
+const apiRouter = require('./routes/api');
 //var mongodbTestRouter = require('./routes/mongodbTest');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
 // app.use(formidableMiddleware());
 
 // CORS options
@@ -47,6 +49,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/heroes', heroesRouter);
+app.use('/api', apiRouter);
 //app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler
@@ -65,5 +68,8 @@ app.use(function(err, req, res, next) {
   res.send(err.stack);
   // res.render('error');
 });
+
+// 初始化数据库
+mongodb.init();
 
 module.exports = app;
