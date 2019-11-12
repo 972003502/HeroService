@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongodb = require('../middleware/mongodb');
+const crypto = require('crypto');
 
 router.use('/', mongodb.dbOperate);
 
