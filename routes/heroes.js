@@ -5,7 +5,7 @@ const multiparty = require('multiparty');
 
 router.use('/api', mongodb.dbOperate);
 
-mongodb.connect('mongodb://localhost:27017/test');
+// mongodb.connect('mongodb://localhost:27017/test');
 
 /* GET hero listing. */
 router.get('/api', function (req, res, next) {

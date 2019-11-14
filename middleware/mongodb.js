@@ -182,7 +182,6 @@ function find(req, res, next) {
       console.error(err);
       return next(err);
     }
-    connectionsInfo();
     res.body = docs;
     res.info = { message: 'GET sccessfull' };
     next();
