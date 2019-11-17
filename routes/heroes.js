@@ -9,12 +9,12 @@ router.use('/api', mongodb.dbOperate);
 
 /* GET hero listing. */
 router.get('/api', function (req, res, next) {
-  res.send(res.body);
+  res.send(res.dbOperate.data);
 });
 
 /* POST hero listing. */
 router.post('/api', function (req, res, next) {
-  res.send(res.info);
+  res.send(res.dbOperate.status);
 });
 
 router.post('/', function (req, res, next) {

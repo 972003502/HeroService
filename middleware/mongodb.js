@@ -13,7 +13,8 @@ let dbOptions = {
   reconnectInterval: 30,
   connectTimeoutMS: 10000,
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useCreateIndex: true
 }
 let schemaOptions = {
   strict: true,
@@ -43,7 +44,7 @@ function connect(connectUrl, options = dbOptions) {
   })
   mongoose.connection.on('connected', () => {
     connected = true;
-    connectionsInfo();
+    // connectionsInfo();
     console.log('connect seccess!', {
       database: mongoose.connection.name,
       connectionTime: Date.now() - start
@@ -175,35 +176,77 @@ function dbOperate(req, res, next) {
 
 // 数据库查询操作中间件
 function find(req, res, next) {
-  let model = modelsCache.get(req.query.model);
+  let model = modelsCache.get(req.query.collection);
+  let conditions = req.query.conditions || null;
   if (!model) return next();
-  model.find(null, function (err, docs) {
+  model.find(conditions, function (err, docs) {
     if (err) {
+      res.dbOperate = {
+        method: 'find',
+        status: 0,
+        statusText: 'Failed',
+        data: null
+      }
       console.error(err);
       return next(err);
     }
-    res.body = docs;
-    res.info = { message: 'GET sccessfull' };
+    res.dbOperate = {
+      method: 'find',
+      status: 1,
+      statusText: 'success',
+      data: docs || null
+    }
     next();
   })
 }
 
 // 数据库条件查询操作中间件
-function findByCondition(req, res, next) {
-
+function findOne(req, res, next) {
+  let model = modelsCache.get(req.query.collection);
+  let conditions = req.query.conditions;
+  if (!model) return next();
+  model.findOne(conditions, function (err, docs) {
+    if (err) {
+      res.dbOperate = {
+        method: 'find',
+        status: 0,
+        statusText: 'Failed',
+        data: null
+      }
+      console.error(err);
+      return next(err);
+    }
+    res.dbOperate = {
+      method: 'find',
+      status: 1,
+      statusText: 'success',
+      data: docs || null
+    }
+    next();
+  })
 }
 
 // 数据库新增操作中间件
 function add(req, res, next) {
-  let model = modelsCache.get(req.query.model);
+  let model = modelsCache.get(req.query.collection);
   if (!model) return next();
   model.create(req.body, function (err, docs) {
     if (err) {
+      res.dbOperate = {
+        method: 'create',
+        status: 0,
+        statusText: 'Failed',
+        data: null
+      }
       console.error(err);
       return next(err);
     }
-    res.body = docs;
-    res.info = { message: 'POST sccessfull' };
+    res.dbOperate = {
+      method: 'create',
+      status: 1,
+      statusText: 'success',
+      data: docs || null
+    }
     next();
   })
 }
@@ -256,6 +299,7 @@ module.exports = mongodb = {
   init: init,
   dbOperate: dbOperate,
   find: find,
+  findOne: findOne,
   add: add,
   close: close,
   schemasCache: schemasCache,

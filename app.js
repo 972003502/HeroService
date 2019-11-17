@@ -10,7 +10,7 @@ const mongodb = require('./middleware/mongodb');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const heroesRouter = require('./routes/heroes');
-const apiRouter = require('./routes/api');
+const register = require('./routes/api/register');
 //var mongodbTestRouter = require('./routes/mongodbTest');
 
 const app = express();
@@ -49,7 +49,7 @@ app.use(function(req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/heroes', heroesRouter);
-app.use('/api', apiRouter);
+app.use('/api/register', register);
 //app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler

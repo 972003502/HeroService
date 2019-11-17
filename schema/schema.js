@@ -13,13 +13,18 @@ const schema = {
   userInfo: {
     email: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
     nickname: {
       type: String,
       required: true
     },
     password: {
+      type: String,
+      required: true
+    },
+    salt: {
       type: String,
       required: true
     },
