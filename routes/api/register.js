@@ -27,17 +27,10 @@ router.get('/salt', function (req, res, next) {
   res.send(staticSalt);
 });
 
-router.get('/user', function (req, res, next) {
-  console.log(req.query);
-  req.query.conditions = Object.fromEntries(
-    Object.entries(req.query)
-      .filter(item => item[0][0] == '_')
-      .map(item => [item[0].slice(1), item[1]])
-  );
-  next();
-}, mongodb.findOne, function (req, res, next) {
-  res.send(res.dbOperate.data);
-});
+router.get('/user', mongodb.findOne,
+  function (req, res, next) {
+    res.send(res.dbOperate.data);
+  });
 
 
 /* POST listing. */

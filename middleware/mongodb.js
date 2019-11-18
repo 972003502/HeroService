@@ -177,8 +177,8 @@ function dbOperate(req, res, next) {
 // 数据库查询操作中间件
 function find(req, res, next) {
   let model = modelsCache.get(req.query.collection);
-  let conditions = req.query.conditions || null;
   if (!model) return next();
+  let conditions = conditionParser(req.query);
   model.find(conditions, function (err, docs) {
     if (err) {
       res.dbOperate = {
@@ -200,11 +200,19 @@ function find(req, res, next) {
   })
 }
 
+function conditionParser(query) {
+  return Object.fromEntries(
+    Object.entries(query)
+      .filter(item => item[0][0] == '_')
+      .map(item => [item[0].slice(1), item[1]])
+  );
+}
+
 // 数据库条件查询操作中间件
 function findOne(req, res, next) {
   let model = modelsCache.get(req.query.collection);
-  let conditions = req.query.conditions;
   if (!model) return next();
+  let conditions = conditionParser(req.query);
   model.findOne(conditions, function (err, docs) {
     if (err) {
       res.dbOperate = {
