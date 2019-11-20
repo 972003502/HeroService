@@ -1,13 +1,20 @@
 const crypto = require('crypto');
 const rand =  require('csprng');
+const CryptoJS = require("crypto-js");
+
+let password = '123123123';
+let salt = 'bc30b459a4c5af7208263dc3557e4decebeb3c9bd17865edc5b16d7e92d620d5';
 
 const hash = crypto.createHash('sha256');
-hash.update('要创建哈希摘要的数据');
-hash.update('要创建哈希摘要的数据');
-let reslut = hash.digest('Hex');
-console.log(reslut);
+hash.update(password);
+let passwordHash = hash.digest('Hex');
+const hash2 = crypto.createHash('sha256');
+hash2.update(passwordHash + salt);
+let passwordSalt = hash2.digest('Hex');
+console.log(passwordSalt);
 
-console.log(rand(256, 16).toString());
+let res = CryptoJS.SHA256(CryptoJS.SHA256(password) + salt);
+console.log(res.toString(CryptoJS.enc.Hex));
 
 // // 1 7 6 8 2 4 3 5 9 11 10 12
 

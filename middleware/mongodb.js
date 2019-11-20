@@ -178,7 +178,7 @@ function dbOperate(req, res, next) {
 function find(req, res, next) {
   let model = modelsCache.get(req.query.collection);
   if (!model) return next();
-  let conditions = conditionParser(req.query);
+  let conditions = req.conditions || conditionParser(req.query);
   model.find(conditions, function (err, docs) {
     if (err) {
       res.dbOperate = {
@@ -212,7 +212,7 @@ function conditionParser(query) {
 function findOne(req, res, next) {
   let model = modelsCache.get(req.query.collection);
   if (!model) return next();
-  let conditions = conditionParser(req.query);
+  let conditions = req.conditions || conditionParser(req.query);
   model.findOne(conditions, function (err, docs) {
     if (err) {
       res.dbOperate = {
