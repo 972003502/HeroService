@@ -3,11 +3,9 @@ const router = express.Router();
 const mongodb = require('../../middleware/mongodb');
 const rand = require('csprng');
 
-mongodb.connect('mongodb://localhost:27017/test');
-
 let salt = '';
 
-/* POST listing. */
+/* GET listing. */
 router.get('/salt', function (req, res, next) {
   salt = rand(256, 16);
   let timer = setTimeout(() => {

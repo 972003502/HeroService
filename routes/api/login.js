@@ -14,10 +14,7 @@ function encryptWithSalt(str, salt, enc = 'Hex') {
   return hash.toString(cryptoJS.enc[enc]);
 }
 
-router.get('/', function (req, res, next) {
-  res.send('Hello login');
-});
-
+/* GET listing. */
 router.get('/userSalt', mongodb.findOne, function (req, res, next) {
   if (res.dbOperate.data) {
     dynamicSalt = rand(256, 16);
@@ -35,6 +32,7 @@ router.get('/userSalt', mongodb.findOne, function (req, res, next) {
   }
 });
 
+/* POST listing. */
 router.post('/', function (req, res, next) {
   req.conditions = { email: req.body.email };
   next();

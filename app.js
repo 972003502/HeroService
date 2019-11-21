@@ -4,15 +4,14 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const mongodb = require('./middleware/mongodb');
-// var formidableMiddleware = require('express-formidable');
+const boot = require('./boot');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const heroesRouter = require('./routes/heroes');
 const register = require('./routes/api/register');
 const login = require('./routes/api/login');
-//var mongodbTestRouter = require('./routes/mongodbTest');
+//const mongodbTestRouter = require('./routes/mongodbTest');
 
 const app = express();
 
@@ -27,7 +26,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
-// app.use(formidableMiddleware());
 
 // CORS options
 // must setting it befor the Router
@@ -35,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
 // 服务器端还必须设置一个名为Access-Control-Allow-Headers的Header， 
 // 将它的值设置为 Content-Type，
 // 表明服务器能够接收到前端发送的请求中的ContentType属性并使用它的值
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header('Content-Language', 'zh-cn');
   res.header('Cache-Control', 'no-cache');
   res.header('Access-Control-Allow-Origin', '*');
@@ -55,12 +53,20 @@ app.use('/api/login', login);
 //app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
+app.use(function (req, res, next) {
+  console.log(123);
+  mongodb.init();
+  mongodb.connect('mongodb://localhost:27017/test');
+  next();
+});
+
+
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -71,7 +77,7 @@ app.use(function(err, req, res, next) {
   // res.render('error');
 });
 
-// 初始化数据库
-mongodb.init();
+// 启动项设置
+boot();
 
 module.exports = app;
