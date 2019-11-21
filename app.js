@@ -57,14 +57,6 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
-app.use(function (req, res, next) {
-  console.log(123);
-  mongodb.init();
-  mongodb.connect('mongodb://localhost:27017/test');
-  next();
-});
-
-
 // error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
