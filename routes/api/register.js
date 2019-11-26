@@ -15,7 +15,8 @@ router.get('/salt', function (req, res, next) {
   res.send(salt);
 });
 
-router.get('/hasUser', mongodb.findOne,
+router.get('/hasUser',
+  mongodb.findOne,
   function (req, res, next) {
     if (!res.dbOperate.data) {
       res.send(false);
@@ -29,25 +30,27 @@ router.get('/hasUser', mongodb.findOne,
 /* POST listing. */
 router.post('/', function (req, res, next) {
   req.body.salt = salt;
+  salt = '';
   next();
-}, mongodb.add, function (req, res, next) {
-  if (res.dbOperate.status) {
-    res.info = {
-      status: 1,
-      statusText: 'Success',
-      message: 'Registration success',
-      date: Date.now()
+},
+  mongodb.add,
+  function (req, res, next) {
+    if (res.dbOperate.status) {
+      res.info = {
+        status: 1,
+        statusText: 'Success',
+        message: 'Registration success',
+        date: Date.now()
+      }
+    } else {
+      res.info = {
+        status: 0,
+        statusText: 'Failed',
+        message: 'Registration failed',
+        date: Date.now()
+      }
     }
     res.send(res.info);
-  } else {
-    res.info = {
-      status: 0,
-      statusText: 'Failed',
-      message: 'Registration failed',
-      date: Date.now()
-    }
-    res.send(res.info);
-  }
-});
+  });
 
 module.exports = router;

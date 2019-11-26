@@ -11,6 +11,7 @@ const usersRouter = require('./routes/users');
 const heroesRouter = require('./routes/heroes');
 const register = require('./routes/api/register');
 const login = require('./routes/api/login');
+const auth = require('./routes/api/auth');
 //const mongodbTestRouter = require('./routes/mongodbTest');
 
 const app = express();
@@ -38,7 +39,7 @@ app.use(function (req, res, next) {
   res.header('Cache-Control', 'no-cache');
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.header('Access-Control-Max-Age', '1000');
   // res.header('Content-Encoding', 'gzip');
   next();
@@ -50,6 +51,7 @@ app.use('/users', usersRouter);
 app.use('/heroes', heroesRouter);
 app.use('/api/register', register);
 app.use('/api/login', login);
+app.use('/api/auth', auth);
 //app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler
