@@ -12,7 +12,13 @@ function secretCallback(req, payload, done) {
 router.get('/',
   jwt({ secret: secretCallback }),
   function (req, res, next) {
-    res.status(200).send(true);
+    res.info = {
+      status: 1,
+      statusText: 'Success',
+      message: 'Verify Success',
+      date: Date.now()
+    }
+    res.status(200).send(res.info);
   });
 
 module.exports = router;
