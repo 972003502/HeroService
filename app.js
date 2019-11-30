@@ -4,6 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const responseBody = require('./middleware/responseBody');
 const boot = require('./boot');
 
 const indexRouter = require('./routes/index');
@@ -12,6 +13,7 @@ const heroesRouter = require('./routes/heroes');
 const register = require('./routes/api/register');
 const login = require('./routes/api/login');
 const auth = require('./routes/api/auth');
+const captcha = require('./routes/api/captcha');
 //const mongodbTestRouter = require('./routes/mongodbTest');
 
 const app = express();
@@ -27,6 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
+app.use(responseBody);
 
 // CORS options
 // must setting it befor the Router
@@ -52,6 +55,7 @@ app.use('/heroes', heroesRouter);
 app.use('/api/register', register);
 app.use('/api/login', login);
 app.use('/api/auth', auth);
+app.use('/api/captcha', captcha);
 //app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler

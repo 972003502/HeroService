@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 const mongodb = require('../../middleware/mongodb');
 const rand = require('csprng');
-const util = require('../../util/util');
+const { encryptWithSalt } = require('../../util/util');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 let dynamicSalt = '';
+let saltTimer;
 
 /* GET listing. */
 router.get('/userSalt',
@@ -14,18 +15,25 @@ router.get('/userSalt',
   function (req, res, next) {
     if (res.dbOperate.data) {
       dynamicSalt = rand(256, 16);
-      let timer = setTimeout(() => {
+      clearTimeout(saltTimer);
+      saltTimer = setTimeout(() => {
         dynamicSalt = '';
-        clearTimeout(timer);
+        clearTimeout(saltTimer);
       }, 60 * 1000);
       const salt = {
         staticSalt: res.dbOperate.data.salt,
         dynamicSalt: dynamicSalt
       }
-      res.send(salt);
+      res.body.status = 1;
+      res.body.statusText = 'Success';
+      res.body.message = 'Get user\'s salt success';
+      res.body.data = { salt: salt };
     } else {
-      res.send(null);
+      res.body.status = 0;
+      res.body.statusText = 'Failed';
+      res.body.message = 'Get user\'s salt failed';
     }
+    res.send(res.body);
   });
 
 /* POST listing. */
@@ -37,7 +45,7 @@ router.post('/',
   mongodb.findOne,
   function (req, res, next) {
     const password = res.dbOperate.data.password;
-    const passwordSalt = util.encryptWithSalt(password, dynamicSalt, 'Hex');
+    const passwordSalt = encryptWithSalt(password, dynamicSalt, 'Hex');
     dynamicSalt = '';
     if (req.body.password == passwordSalt) {
       const payload = {
@@ -48,24 +56,18 @@ router.post('/',
         issuer: 'http://localhost:3000',
         expiresIn: '30s'
       };
-      const secret = util.encryptWithSalt(req.ip, process.env.SECRET_SEED, 'Hex');
+      const secret = encryptWithSalt(req.ip, process.env.SECRET_SEED, 'Hex');
       const token = jwt.sign(payload, secret, options);
-      res.info = {
-        status: 1,
-        statusText: 'Success',
-        message: 'Login Success',
-        date: Date.now(),
-        token: token
-      }
+      res.body.status = 1;
+      res.body.statusText = 'Success';
+      res.body.message = 'Login success';
+      res.body.data = { token: token };
     } else {
-      res.info = {
-        status: 0,
-        statusText: 'Failed',
-        message: 'Login Failed',
-        date: Date.now()
-      }
+      res.body.status = 0;
+      res.body.statusText = 'Failed';
+      res.body.message = 'Login failed';
     }
-    res.send(res.info);
+    res.send(res.body);
   });
 
 module.exports = router;

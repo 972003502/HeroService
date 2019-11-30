@@ -1,7 +1,7 @@
-const crypto = require('crypto');
-const rand =  require('csprng');
-const CryptoJS = require("crypto-js");
-const result =  require('dotenv').config();
+// const crypto = require('crypto');
+// const rand =  require('csprng');
+// const CryptoJS = require("crypto-js");
+// const result =  require('dotenv').config();
 
 // let password = '123123123';
 // let salt = 'bc30b459a4c5af7208263dc3557e4decebeb3c9bd17865edc5b16d7e92d620d5';
@@ -16,11 +16,7 @@ const result =  require('dotenv').config();
 
 // let res = CryptoJS.SHA256(CryptoJS.SHA256(password) + salt);
 // console.log(res.toString(CryptoJS.enc.Hex));
-let date = new Date();
-let setDate = date.setDate(date.getDate() + 1);
-let time = Date.now();
-console.log(time);
-console.log(setDate - time);
+
 
 // // 1 7 6 8 2 4 3 5 9 11 10 12
 
@@ -72,4 +68,11 @@ console.log(setDate - time);
 //   })
 // })
 
-
+let num2 = require('./test2');
+let num = 5;
+function foo (value) {
+  eval(value + '= 100');
+}
+foo('num');
+console.log(num);
+console.log(num2);
