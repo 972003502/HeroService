@@ -54,7 +54,7 @@ router.post('/',
       const options = {
         algorithm: 'HS256',
         issuer: 'http://localhost:3000',
-        expiresIn: '30s'
+        expiresIn: '1d'
       };
       const secret = encryptWithSalt(req.ip, process.env.SECRET_SEED, 'Hex');
       const token = jwt.sign(payload, secret, options);
