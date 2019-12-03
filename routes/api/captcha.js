@@ -14,16 +14,25 @@ router.get('/', function (req, res, next) {
     captchaText = '';
     clearTimeout(timer);
   }, 60 * 1000);
+  res.body.status = 200;
+  res.body.statusText = 'Success';
+  res.body.message = 'Get captcha success';
+  res.body.data = { captcha: captcha.body }
   res.send(captcha.body);
 });
 
 router.get('/check', function (req, res, next) {
-  let result = false;
   if (req.query.captcha.toLowerCase() == captchaText.toLowerCase()) {
-    result = true;
+    res.body.status = 200;
+    res.body.statusText = 'Success';
+    res.body.message = 'Verify Success';
+  } else {
+    res.body.status = 403;
+    res.body.statusText = 'Failed';
+    res.body.message = 'Captcha verification failed';
   }
   captchaText = '';
-  res.send(result);
+  res.send(res.body);
 });
 
 module.exports = router;

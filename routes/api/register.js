@@ -17,7 +17,7 @@ router.get('/salt', function (req, res, next) {
     salt = '';
     clearTimeout(saltTimer);
   }, 60 * 1000);
-  res.body.status = 1;
+  res.body.status = 200;
   res.body.statusText = 'Success';
   res.body.message = 'Get salt success';
   res.body.data = { salt: salt };
@@ -28,17 +28,17 @@ router.get('/hasUser',
   mongodb.findOne,
   function (req, res, next) {
     if (!res.dbOperate.data) {
-      res.body.status = 0;
+      res.body.status = 200;
       res.body.statusText = 'Failed';
       res.body.message = 'User already exists';
       res.body.data = { hasUser: false };
     } else if (req.query._email == res.dbOperate.data.email) {
-      res.body.status = 1;
+      res.body.status = 200;
       res.body.statusText = 'Success';
       res.body.message = 'User does not exist';
       res.body.data = { hasUser: true };
     } else {
-      res.body.status = 0;
+      res.body.status = 200;
       res.body.statusText = 'Failed';
       res.body.message = 'User already exists';
       res.body.data = { hasUser: false };
@@ -56,7 +56,7 @@ router.get('/captcha', function (req, res, next) {
     captchaText = '';
     clearTimeout(captchaTimer);
   }, 300 * 1000);
-  res.body.status = 1;
+  res.body.status = 200;
   res.body.statusText = 'Success';
   res.body.message = 'Get captcha success';
   res.body.data = { captcha: captcha.body };
@@ -67,7 +67,7 @@ router.get('/captcha', function (req, res, next) {
 router.post('/', function (req, res, next) {
   if (req.body.captcha.toLowerCase() != captchaText.toLowerCase()) {
     captchaText = '';
-    res.body.status = 0;
+    res.body.status = 403;
     res.body.statusText = 'Failed';
     res.body.message = 'Captcha verification failed';
     res.body.data = { captchaVerify: false };
@@ -82,11 +82,11 @@ router.post('/', function (req, res, next) {
   mongodb.add,
   function (req, res, next) {
     if (res.dbOperate.status) {
-      res.body.status = 1;
+      res.body.status = 200;
       res.body.statusText = 'Success';
       res.body.message = 'Registration success';
     } else {
-      res.body.status = 0;
+      res.body.status = 500;
       res.body.statusText = 'Failed';
       res.body.message = 'Registration failed';
     }

@@ -24,12 +24,12 @@ router.get('/userSalt',
         staticSalt: res.dbOperate.data.salt,
         dynamicSalt: dynamicSalt
       }
-      res.body.status = 1;
+      res.body.status = 200;
       res.body.statusText = 'Success';
       res.body.message = 'Get user\'s salt success';
       res.body.data = { salt: salt };
     } else {
-      res.body.status = 0;
+      res.body.status = 404;
       res.body.statusText = 'Failed';
       res.body.message = 'Get user\'s salt failed';
     }
@@ -58,12 +58,12 @@ router.post('/',
       };
       const secret = encryptWithSalt(req.ip, process.env.SECRET_SEED, 'Hex');
       const token = jwt.sign(payload, secret, options);
-      res.body.status = 1;
+      res.body.status = 200;
       res.body.statusText = 'Success';
       res.body.message = 'Login success';
       res.body.data = { token: token };
     } else {
-      res.body.status = 0;
+      res.body.status = 401;
       res.body.statusText = 'Failed';
       res.body.message = 'Login failed';
     }
