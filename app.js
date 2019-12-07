@@ -18,19 +18,6 @@ const captcha = require('./routes/api/captcha');
 
 const app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
-app.use(responseBody);
-
 // CORS options
 // must setting it befor the Router
 // 想要用ContentType:application/json发送跨域请求，
@@ -47,6 +34,19 @@ app.use(function (req, res, next) {
   // res.header('Content-Encoding', 'gzip');
   next();
 });
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: false })); // support encoded bodies
+app.use(responseBody);
 
 // Router options
 app.use('/', indexRouter);
