@@ -14,6 +14,7 @@ const register = require('./routes/api/register');
 const login = require('./routes/api/login');
 const auth = require('./routes/api/auth');
 const captcha = require('./routes/api/captcha');
+const mail = require('./routes/api/mail');
 //const mongodbTestRouter = require('./routes/mongodbTest');
 
 const app = express();
@@ -56,6 +57,7 @@ app.use('/api/register', register);
 app.use('/api/login', login);
 app.use('/api/auth', auth);
 app.use('/api/captcha', captcha);
+app.use('/api/mail', mail);
 //app.use('/mongodb', mongodbTestRouter);
 
 // catch 404 and forward to error handler
