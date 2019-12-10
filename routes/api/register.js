@@ -29,18 +29,18 @@ router.get('/hasUser',
   function (req, res, next) {
     if (!res.dbOperate.data) {
       res.body.status = 200;
-      res.body.statusText = 'Failed';
-      res.body.message = 'User already exists';
+      res.body.statusText = 'Success';
+      res.body.message = 'User does not exist';
       res.body.data = { hasUser: false };
     } else if (req.query._email == res.dbOperate.data.email) {
       res.body.status = 200;
       res.body.statusText = 'Success';
-      res.body.message = 'User does not exist';
+      res.body.message = 'User exists';
       res.body.data = { hasUser: true };
     } else {
       res.body.status = 200;
-      res.body.statusText = 'Failed';
-      res.body.message = 'User already exists';
+      res.body.statusText = 'Success';
+      res.body.message = 'User does not exist';
       res.body.data = { hasUser: false };
     }
     res.send(res.body);
